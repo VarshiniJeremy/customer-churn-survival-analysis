@@ -1,81 +1,118 @@
-Customer Churn Survival Analysis
+This project applies survival analysis to model time-to-churn for customers instead of treating churn as a simple binary classification problem.
+By using Kaplan–Meier estimation and a Cox Proportional Hazards model, the analysis captures when customers are likely to churn and which factors accelerate or delay churn.
 
-This project analyzes customer churn using survival analysis techniques.  
-Instead of predicting only whether a customer will churn, this project focuses on when churn is likely to happen and which factors affect customer retention over time.
+The goal is to provide actionable insights for customer retention strategies using statistically sound methods.
 
+1. **Why Survival Analysis for Churn?**
 
-1. Project Motivation
+Traditional churn models answer “Will the customer churn?”
+Survival analysis answers “When is the customer likely to churn?”
 
-Traditional churn models treat churn as a binary classification problem.  
-However, in real business scenarios, time matters.
+This distinction is critical for:
 
-This project aims to:
-- Model churn as a time-to-event problem
-- Estimate customer survival probability over time
-- Identify risk factors that increase or reduce churn
-- Segment customers based on churn risk
+A. Prioritizing at-risk customers earlier
 
-2. Dataset Description
+B. Designing time-sensitive retention campaigns
 
-- The dataset is **synthetically generated** to resemble a telecom customer dataset
-- Number of customers: ~7000
-- Time variable: `tenure` (in months)
-- Event variable: `Churn` (Yes / No)
+C. Quantifying the impact of customer attributes on churn risk over time
 
-The dataset generation logic is available in: data_generation.py
+2. **Dataset Description**
 
-3. Project Structure
-   customer-churn-survival-analysis/
-│
-├── churn_survival_analysis.ipynb # Main analysis notebook
-├── data_generation.py # Synthetic data generation
-├── churn_data.csv # Generated dataset
-├── cox_hazard_ratios.csv # Cox model results
-└── README.md
+A. File: *churn_data.csv*
 
-4. 4. Methodology
+B. Each row represents a customer with:
 
-4.1 Survival Analysis
-- Customer churn is treated as an event
-- Tenure represents the time until churn
-- Kaplan–Meier estimator is used to:
-  - Plot overall survival probability
-  - Compare survival across different customer segments
+   i) *Duration:* Time observed until churn or censoring
 
-4.2 Cox Proportional Hazards Model
-- Used to quantify the effect of features on churn risk
-- Outputs hazard ratios:
-  - HR > 1 → higher churn risk
-  - HR < 1 → lower churn risk
-- Top features are visualized with **95% confidence intervals**
+   ii) *Event indicator:*
 
-4.3 Risk Scoring and Segmentation
-- Individual customer risk scores are computed
-- Customers are grouped into:
-  - Low risk
-  - Medium risk
-  - High risk
-  - Very high risk
-- Risk distributions and counts are visualized
+      1 → Customer churned
 
+      0 → Customer still active (right-censored)
 
-5. Visual Analysis Included
+C. *Customer attributes (examples):*
 
-- Overall customer survival curve
-- Survival curves based on:
-  - Contract type
-  - Payment method
-  - Tech support availability
-  - Internet service type
-- Top 15 features by hazard ratio
-- Distribution of customer risk scores
-- Customer count by risk category
+   i) Demographics
 
+   ii) Subscription or usage-related features
 
-6. Key Observations
+   iii) Service or contract characteristics
 
-- Customers with month-to-month contracts churn significantly faster
-- Two-year contracts show the highest retention
-- Customers with tech support have better survival probability
-- Higher tenure strongly reduces churn risk
-- Certain payment methods are associated with slightly higher churn
+      Customers who have not churned by the end of observation are right-censored, which is handled natively by survival models.
+
+3. **Technologies Used**
+
+A. Python
+
+B. pandas – data manipulation
+
+C. lifelines – survival analysis modeling
+
+D. matplotlib – visualization
+
+4. **Methodology**
+1️⃣ Data Preparation
+
+Cleaned and structured the dataset for time-to-event modeling
+
+Defined:
+
+duration → time until churn or censoring
+
+event → churn indicator
+
+Ensured compatibility with survival modeling assumptions
+
+2️⃣ Kaplan–Meier Survival Estimation
+
+Estimated overall customer survival probability over time
+
+Plotted survival curves to visualize retention patterns
+
+Compared survival curves across customer segments
+
+📈 *Insight:* Survival curves reveal how long different customer groups typically remain active.
+
+3️⃣ Cox Proportional Hazards Model
+
+Fit a Cox model to quantify the effect of customer features on churn risk
+
+Estimated hazard ratios:
+
+HR > 1 → Higher churn risk
+
+HR < 1 → Lower churn risk
+
+Interpreted coefficients in business terms
+
+📊 *Outcome:* Identified key drivers that significantly increase or decrease churn risk.
+
+4️⃣ Model Assumption Checks
+
+Verified the Proportional Hazards assumption
+
+Ensured model validity and interpretability
+
+Flagged variables that may violate assumptions for future refinement
+
+5. **Key Outcomes & Insights**
+
+Clear visualization of customer retention behavior over time
+
+Identification of high-risk customer segments
+
+Quantitative measurement of churn drivers via hazard ratios
+
+A statistically robust alternative to standard churn classification models
+
+6. **Deliverables**
+
+Jupyter Notebook with:
+
+Data preprocessing
+Kaplan–Meier survival curves
+Cox model fitting and diagnostics
+
+Visualizations comparing survival across segments
+
+Interpretable results suitable for business decision-making
